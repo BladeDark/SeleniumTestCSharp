@@ -14,7 +14,7 @@ namespace PageObjects
         public ParentPage(IWebDriver driver)
         {
             Driver = driver;
-            PageFactory.InitElements(Driver, this);
+            PageFactory.InitElements(Driver, this); ; ;
         }
 
         

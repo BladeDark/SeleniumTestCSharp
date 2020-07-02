@@ -17,8 +17,6 @@ namespace PageObjects
 
         public void ValidLogin()
         {
-            /*Driver.FindElement(By.Id("username")).SendKeys("admin");
-            Driver.FindElement(By.Id("password")).SendKeys("wtqwerty");*/
              _username.SendKeys("admin");
              _password.SendKeys("wtqwerty");
 
