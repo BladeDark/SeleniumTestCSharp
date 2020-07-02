@@ -10,16 +10,19 @@ namespace PageObjects
         public LandingPage(IWebDriver driver) : base(driver) { }
 
         [FindsBy(How = How.Id, Using = "username")]
-        private IWebElement _username { get; set; }
+        private IWebElement _txtUsername { get; set; }
 
         [FindsBy(How = How.Id, Using = "password")]
-        private IWebElement _password { get; set; }
+        private IWebElement _txtPassword { get; set; }
+
+        [FindsBy(How = How.XPath, Using = "//button[@type='submit']")]
+        private IWebElement _btnLogin { get; set; }
 
         public void ValidLogin()
         {
-             _username.SendKeys("admin");
-             _password.SendKeys("wtqwerty");
-
+             _txtUsername.SendKeys("admin");
+             _txtPassword.SendKeys("wtqwerty");
+            _btnLogin.Click();
         }
 
     }

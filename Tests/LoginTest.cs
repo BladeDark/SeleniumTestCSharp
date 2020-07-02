@@ -17,8 +17,8 @@ namespace Tests
           
             LandingPage landingPage = new LandingPage(Driver);
             landingPage.ValidLogin();
-            
-
+            HomePage homePage = new HomePage(Driver);
+            homePage.SearchRecordLocator();
 
         }
 
