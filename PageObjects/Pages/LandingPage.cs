@@ -10,19 +10,19 @@ namespace SeleniumCSharpTest.Pages
         public LandingPage(IWebDriver driver) : base(driver) { }
 
         [FindsBy(How = How.Id, Using = "username")]
-        private IWebElement _txtUsername { get; set; }
+        private IWebElement TxtUsername { get; set; }
 
         [FindsBy(How = How.Id, Using = "password")]
-        private IWebElement _txtPassword { get; set; }
+        private IWebElement TxtPassword { get; set; }
 
         [FindsBy(How = How.XPath, Using = "//button[@type='submit']")]
-        private IWebElement _btnLogin { get; set; }
+        private IWebElement BtnLogin { get; set; }
 
         public void ValidLogin()
         {
-             _txtUsername.SendKeys("admin");
-             _txtPassword.SendKeys("wtqwerty");
-            _btnLogin.Click();
+            TxtUsername.SendKeys("admin");
+            TxtPassword.SendKeys("wtqwerty");
+            BtnLogin.Click();
         }
 
     }

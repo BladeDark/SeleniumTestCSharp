@@ -10,12 +10,12 @@ namespace SeleniumCSharpTest.Pages
         public HomePage(IWebDriver driver) : base(driver) { }
 
         [FindsBy(How = How.XPath, Using = "//app-header-search//button")]
-        private IWebElement _btnSearch { get; set; }
+        private IWebElement BtnSearch { get; set; }
 
         public void SearchRecordLocator()
         {
-            Wait.Until(ExpectedConditions.ElementToBeClickable(_btnSearch));
-            _btnSearch.Click();
+            Wait.Until(ExpectedConditions.ElementToBeClickable(BtnSearch));
+            BtnSearch.Click();
         }
     }
 }
