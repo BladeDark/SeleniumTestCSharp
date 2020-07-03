@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
 
-namespace PageObjects
+namespace SeleniumCSharpTest.Pages
 {
     public class LandingPage: ParentPage
     {

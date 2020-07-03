@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AutomationResources\AutomationResources.csproj" />
-    <ProjectReference Include="..\PageObjects\PageObjects.csproj" />
+    <ProjectReference Include="..\PageObjects\SeleniumCSharpTest.csproj" />
   </ItemGroup>
 
 </Project>

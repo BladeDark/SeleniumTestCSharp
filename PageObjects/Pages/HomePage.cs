@@ -3,7 +3,7 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 
-namespace PageObjects
+namespace SeleniumCSharpTest.Pages
 {
     public class HomePage : ParentPage
     {

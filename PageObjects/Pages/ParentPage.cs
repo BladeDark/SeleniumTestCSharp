@@ -3,7 +3,7 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using System;
 
-namespace PageObjects
+namespace SeleniumCSharpTest.Pages
 {
  
     public abstract class ParentPage
