@@ -1,31 +1,34 @@
 ﻿using AutomationResources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NLog;
 using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
+
 using System.Diagnostics;
-using System.Text;
+using TechTalk.SpecFlow;
 
 namespace SeleniumCSharpTest.Tests
 {
-    [TestClass]
+    [Binding]
     public class ParentTest
     {
    
-        protected static IWebDriver Driver;
+        protected IWebDriver Driver;
+        protected static Logger logger = LogManager.GetCurrentClassLogger();
         protected static TestContext _testContext;
 
         public TestContext TestContext { get; set; }
 
         
-
+        /*
         [TestInitialize]
         public void RunBeforeEveryTest()
         {
+            var url = "https://test-api.worldticket.net/ui/sms5-single/sms-systests-fork1/";
             var factory = new WebDriverFactory();
             Driver = factory.Create(BrowserType.Chrome);
-            Driver.Manage().Window.Maximize();
-            Driver.Navigate().GoToUrl("https://test-api.worldticket.net/ui/sms5-single/sms-systests-fork1/");
+            logger.Info($"Open url=>{url}");
+
+
         }
 
         [TestCleanup]
@@ -33,7 +36,7 @@ namespace SeleniumCSharpTest.Tests
         {
             Driver.Close();
             Driver.Quit();
-            Trace.Write("RunAfterEveryTestMethod will execute after every single test method in a class");
+   
         }
 
         [ClassCleanup]
@@ -42,5 +45,6 @@ namespace SeleniumCSharpTest.Tests
          
             Trace.Write("I will run one time after all the tests in the class finished");
         }
+        */
     }
 }
