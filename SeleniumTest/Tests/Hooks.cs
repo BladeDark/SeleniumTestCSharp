@@ -1,32 +1,26 @@
-﻿using AutomationResources;
-using SeleniumTest.Tests;
-
+﻿using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 
-namespace SeleniumTest
+namespace SeleniumTest.Tests
 {
     [Binding]
-    public class Hooks: ParentTest
+    class Hooks
     {
-        // For additional details on SpecFlow hooks see http://go.specflow.org/doc-hooks
+        private IWebDriver _driver;
 
-        [BeforeScenario]
-        public void BeforeScenario()
+        public Hooks(IWebDriver driver)
         {
-            var factory = new WebDriverFactory();
-            Driver = factory.Create(BrowserType.Chrome);
-            Driver.Manage().Window.Maximize();
-            var url = "https://test-api.worldticket.net/ui/sms5-single/sms-systests-fork1/";
-            Driver.Navigate().GoToUrl(url);
-            logger.Info($"Open url=>{url}");
+            _driver = driver;
         }
+
 
         [AfterScenario]
         public void AfterScenario()
         {
-            Driver.Close();
-            Driver.Quit();
+            _driver.Close();
+            _driver.Quit();
 
         }
+
     }
 }
