@@ -20,7 +20,7 @@ namespace SeleniumTest
         }
 
 
-        [BeforeScenario]
+        [BeforeScenario(Order = 0)]
         public void InitializeWebDriver()
         {
             var factory = new WebDriverFactory();
