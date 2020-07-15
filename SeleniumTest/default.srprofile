@@ -30,7 +30,7 @@
   </DeploymentTransformation>
 
   <Report disable="false">
-        <Template name="ReportTemplate.cshtml" outputName="Report_{now:yyyy-MM-dd}.html" />
+        <Template name="ReportTemplate.cshtml" outputName="Report_{now}.html" />
   </Report>
 
   <VSTest 

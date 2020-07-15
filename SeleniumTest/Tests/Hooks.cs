@@ -22,12 +22,12 @@ namespace SeleniumTest.Tests
         }
 
         [AfterScenario]
-        public void AfterScenario()
+        public void AfterScenario(FeatureContext featureContext, ScenarioContext scenarioContext)
         {
 
             if (_scenarioContext.TestError != null)
             {
-                TakeScreenshot(_driver);
+                TakeScreenshot(_driver, featureContext, scenarioContext);
             }
 
             _driver.Close();
@@ -35,13 +35,13 @@ namespace SeleniumTest.Tests
 
         }
 
-        private void TakeScreenshot(IWebDriver driver)
+        private void TakeScreenshot(IWebDriver driver,FeatureContext featureContext,ScenarioContext scenarioContext)
         {
             try
             {
                 string fileNameBase = string.Format("error_{0}_{1}_{2}",
-                                                    FeatureContext.Current.FeatureInfo.Title.ToIdentifier(),
-                                                    ScenarioContext.Current.ScenarioInfo.Title.ToIdentifier(),
+                                                    featureContext.FeatureInfo.Title.ToIdentifier(),
+                                                    scenarioContext.ScenarioInfo.Title.ToIdentifier(),
                                                     DateTime.Now.ToString("yyyyMMdd_HHmmss"));
 
                 var artifactDirectory = Path.Combine(Directory.GetCurrentDirectory(), "testresults");
