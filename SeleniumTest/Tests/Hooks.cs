@@ -11,21 +11,15 @@ namespace SeleniumTest.Tests
     [Binding]
     public class Hooks
     {
-   
-
-
+ 
         private IWebDriver _driver;
         private ScenarioContext _scenarioContext;
      
-
         public Hooks(IWebDriver driver, ScenarioContext scenarioContex)
         {
             _driver = driver;
             _scenarioContext = scenarioContex;
         }
-
-        
-
 
         [AfterScenario]
         public void AfterScenario()

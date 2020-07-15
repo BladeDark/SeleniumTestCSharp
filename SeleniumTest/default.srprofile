@@ -29,8 +29,8 @@
     </Steps>
   </DeploymentTransformation>
 
-  <Report disable="true">
-        <Template name="ReportTemplate.cshtml" outputName="Report.html" />
+  <Report disable="false">
+        <Template name="ReportTemplate.cshtml" outputName="Report_{now:yyyy-MM-dd}.html" />
   </Report>
 
   <VSTest 
