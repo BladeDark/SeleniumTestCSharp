@@ -22,12 +22,22 @@ namespace SeleniumTest.Tests
         }
 
         [AfterScenario]
-        public void AfterScenario(FeatureContext featureContext, ScenarioContext scenarioContext)
+        public void AfterScenario()
         {
 
             if (_scenarioContext.TestError != null)
             {
-                TakeScreenshot(_driver, featureContext, scenarioContext);
+                //TakeScreenshot(_driver, featureContext, scenarioContext);
+
+                var takesScreenshot = _driver as ITakesScreenshot;
+                if (takesScreenshot != null)
+                {
+                    var screenshot = takesScreenshot.GetScreenshot();
+                    var tempFileName = Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileNameWithoutExtension(Path.GetTempFileName())) + ".jpg";
+                    screenshot.SaveAsFile(tempFileName, ScreenshotImageFormat.Png);
+
+                    Console.WriteLine($"SCREENSHOT[ file:///{tempFileName} ]SCREENSHOT");
+                }
             }
 
             _driver.Close();
