@@ -1,36 +1,19 @@
 using OpenQA.Selenium;
-using SeleniumTest.Pages;
 using TechTalk.SpecFlow;
 
 namespace SeleniumTest.Tests
 {
     [Binding]
-    public class LoginTest
+    public class LoginTest : ParentTest
     {
-        private IWebDriver _driver;
-        private LandingPage LandingPage => new LandingPage(_driver);
-        private HomePage HomePage => new HomePage(_driver);
-
-        public LoginTest(IWebDriver driver)
-        {
-            _driver = driver;
-        }
-
+        public LoginTest(IWebDriver driver) : base(driver) { }
 
         [Given(@"I am on website")]
         public void GivenIAmOnWebsite()
         {
-            _driver.Manage().Window.Maximize();
+            driver.Manage().Window.Maximize();
             var url = "https://test-api.worldticket.net/ui/sms5-single/sms-systests-fork1/";
-            _driver.Navigate().GoToUrl(url);
-        }
-
-        [When(@"I login on the website")]
-        public void WhenILoginOnTheWebsite()
-        {
-          
-            LandingPage.ValidLogin();
-            HomePage.SearchRecordLocator();
+            driver.Navigate().GoToUrl(url);
         }
 
     }

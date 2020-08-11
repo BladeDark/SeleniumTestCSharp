@@ -1,35 +1,108 @@
 ﻿
+using AventStack.ExtentReports;
+using AventStack.ExtentReports.Gherkin.Model;
+using AventStack.ExtentReports.Reporter;
 using OpenQA.Selenium;
 using System;
 using System.IO;
-using System.Text;
+using System.Reflection;
 using TechTalk.SpecFlow;
-using TechTalk.SpecFlow.Tracing;
 
 namespace SeleniumTest.Tests
 {
+
     [Binding]
-    public class Hooks
+    public class Hooks : ParentTest
     {
- 
-        private IWebDriver _driver;
-        private ScenarioContext _scenarioContext;
-     
-        public Hooks(IWebDriver driver, ScenarioContext scenarioContex)
+        private static ExtentReports extent;
+        public Hooks(IWebDriver driver) : base(driver) { }
+
+        [BeforeScenario(Order = 1)]
+        public void FeatureContextInjection(FeatureContext featureContextInject)
         {
-            _driver = driver;
-            _scenarioContext = scenarioContex;
+            FeatureName = extent.CreateTest<Feature>(featureContextInject.FeatureInfo.Title);
+        }
+
+        [BeforeScenario(Order = 3)]
+        public void AddScenarioName()
+        {
+            Scenario = FeatureName.CreateNode<Scenario>(scenarioContext.ScenarioInfo.Title);
+        }
+
+        [BeforeTestRun]
+        public static void InitializeReport()
+        {
+            var htmlReporter = new ExtentHtmlReporter(@"C:\Users\RAS_T\source\repos\BladeDark\SeleniumTestCSharp\index.html");
+            htmlReporter.Config.Theme = AventStack.ExtentReports.Reporter.Configuration.Theme.Dark;
+
+            extent = new ExtentReports();
+            extent.AttachReporter(htmlReporter);
+        }
+
+        [AfterTestRun]
+        public static void TearDownReport()
+        {
+            extent.Flush();
+        }
+
+        [AfterStep]
+        public void InsertReportingSteps()
+        {
+            var stepType = scenarioContext.StepContext.StepInfo.StepDefinitionType.ToString();
+            if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK)
+            {
+                if (stepType == "Given")
+                    Scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text);
+                else if (stepType == "When")
+                    Scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text);
+                else if (stepType == "Then")
+                    Scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text);
+                else if (stepType == "And")
+                    Scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text);
+
+            }
+            else if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.TestError)
+            {
+                if (stepType == "Given")
+                {
+                    Scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.InnerException).Log(Status.Fail);
+                }
+                else if (stepType == "When")
+                {
+                    Scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.InnerException).Log(Status.Fail);
+                }
+                else if (stepType == "Then")
+                {
+                    Scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
+                }
+                else if (stepType == "And")
+                {
+                    Scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
+                 
+                }
+            }
+            else if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.StepDefinitionPending)
+            {
+                if (stepType == "Given")
+                    Scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+                else if (stepType == "When")
+                    Scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+                else if (stepType == "Then")
+                    Scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+                else if (stepType == "And")
+                    Scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+            }
         }
 
         [AfterScenario]
         public void AfterScenario()
         {
 
-            if (_scenarioContext.TestError != null)
+            if (scenarioContext.TestError != null)
             {
                 //TakeScreenshot(_driver, featureContext, scenarioContext);
 
-                var takesScreenshot = _driver as ITakesScreenshot;
+                var takesScreenshot = driver as ITakesScreenshot;
                 if (takesScreenshot != null)
                 {
                     var screenshot = takesScreenshot.GetScreenshot();
@@ -40,46 +113,15 @@ namespace SeleniumTest.Tests
                 }
             }
 
-            _driver.Close();
-            _driver.Quit();
+            driver.Close();
+            driver.Quit();
 
         }
 
-        private void TakeScreenshot(IWebDriver driver,FeatureContext featureContext,ScenarioContext scenarioContext)
+        private void CaptureScreenshotAndReturnModel(string name)
         {
-            try
-            {
-                string fileNameBase = string.Format("error_{0}_{1}_{2}",
-                                                    featureContext.FeatureInfo.Title.ToIdentifier(),
-                                                    scenarioContext.ScenarioInfo.Title.ToIdentifier(),
-                                                    DateTime.Now.ToString("yyyyMMdd_HHmmss"));
-
-                var artifactDirectory = Path.Combine(Directory.GetCurrentDirectory(), "testresults");
-                if (!Directory.Exists(artifactDirectory))
-                    Directory.CreateDirectory(artifactDirectory);
-
-                string pageSource = driver.PageSource;
-                string sourceFilePath = Path.Combine(artifactDirectory, fileNameBase + "_source.html");
-                File.WriteAllText(sourceFilePath, pageSource, Encoding.UTF8);
-                Console.WriteLine("Page source: {0}", new Uri(sourceFilePath));
-
-                ITakesScreenshot takesScreenshot = driver as ITakesScreenshot;
-
-                if (takesScreenshot != null)
-                {
-                    var screenshot = takesScreenshot.GetScreenshot();
-
-                    string screenshotFilePath = Path.Combine(artifactDirectory, fileNameBase + "_screenshot.png");
-
-                    screenshot.SaveAsFile(screenshotFilePath, ScreenshotImageFormat.Png);
-
-                    Console.WriteLine("Screenshot: {0}", new Uri(screenshotFilePath));
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error while taking screenshot: {0}", ex);
-            }
+            var screenshot = ((ITakesScreenshot)driver).GetScreenshot().AsBase64EncodedString;
+            MediaEntityBuilder.CreateScreenCaptureFromBase64String(screenshot, name).Build();
         }
 
 

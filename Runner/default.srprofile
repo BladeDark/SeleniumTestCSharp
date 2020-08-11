@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TestProfile xmlns="http://www.specflow.org/schemas/plus/TestProfile/1.5">
   <Settings 
-    projectName="SeleniumTest" 
+    projectName="Runner" 
     />
   <Execution stopAfterFailures="0" testThreadCount="5" testSchedulingMode="Sequential" retryFor="Failing" retryCount="1"/>
   <!-- For collecting by a SpecRun server update and enable the following element. For using the 
@@ -9,7 +9,9 @@
     <Server serverUrl="http://specrunserver:6365" publishResults="true" />
   -->
   <TestAssemblyPaths>
+    <TestAssemblyPath>Runner.dll</TestAssemblyPath>
     <TestAssemblyPath>SeleniumTest.dll</TestAssemblyPath>
+    <TestAssemblyPath>SeleniumTest2.dll</TestAssemblyPath>
   </TestAssemblyPaths>
   <DeploymentTransformation>
     <Steps>

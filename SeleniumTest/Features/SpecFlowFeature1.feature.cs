@@ -19,7 +19,8 @@ namespace SeleniumTest.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.3.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [TechTalk.SpecRun.FeatureAttribute("SpecFlowFeature1", SourceFile="Features\\SpecFlowFeature1.feature", SourceLine=0)]
+    [NUnit.Framework.TestFixtureAttribute()]
+    [NUnit.Framework.DescriptionAttribute("SpecFlowFeature1")]
     public partial class SpecFlowFeature1Feature
     {
         
@@ -30,7 +31,7 @@ namespace SeleniumTest.Features
 #line 1 "SpecFlowFeature1.feature"
 #line hidden
         
-        [TechTalk.SpecRun.FeatureInitialize()]
+        [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
@@ -38,18 +39,19 @@ namespace SeleniumTest.Features
             testRunner.OnFeatureStart(featureInfo);
         }
         
-        [TechTalk.SpecRun.FeatureCleanup()]
+        [NUnit.Framework.OneTimeTearDownAttribute()]
         public virtual void FeatureTearDown()
         {
             testRunner.OnFeatureEnd();
             testRunner = null;
         }
         
+        [NUnit.Framework.SetUpAttribute()]
         public virtual void TestInitialize()
         {
         }
         
-        [TechTalk.SpecRun.ScenarioCleanup()]
+        [NUnit.Framework.TearDownAttribute()]
         public virtual void TestTearDown()
         {
             testRunner.OnScenarioEnd();
@@ -58,6 +60,7 @@ namespace SeleniumTest.Features
         public virtual void ScenarioInitialize(TechTalk.SpecFlow.ScenarioInfo scenarioInfo)
         {
             testRunner.OnScenarioInitialize(scenarioInfo);
+            testRunner.ScenarioContext.ScenarioContainer.RegisterInstanceAs<NUnit.Framework.TestContext>(NUnit.Framework.TestContext.CurrentContext);
         }
         
         public virtual void ScenarioStart()
@@ -79,8 +82,9 @@ namespace SeleniumTest.Features
 #line hidden
         }
         
-        [TechTalk.SpecRun.ScenarioAttribute("Login", new string[] {
-                "mytag"}, SourceLine=6)]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Login")]
+        [NUnit.Framework.CategoryAttribute("mytag")]
         public virtual void Login()
         {
             string[] tagsOfScenario = new string[] {
@@ -113,19 +117,23 @@ this.ScenarioInitialize(scenarioInfo);
 #line 8
  testRunner.When("I login on the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
+#line 9
+ testRunner.And("I did something", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [TechTalk.SpecRun.ScenarioAttribute("Login2", new string[] {
-                "mytag"}, SourceLine=10)]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Login2")]
+        [NUnit.Framework.CategoryAttribute("mytag")]
         public virtual void Login2()
         {
             string[] tagsOfScenario = new string[] {
                     "mytag"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Login2", null, tagsOfScenario, argumentsOfScenario);
-#line 11
+#line 12
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -148,8 +156,11 @@ this.ScenarioInitialize(scenarioInfo);
 #line 3
  this.FeatureBackground();
 #line hidden
-#line 12
+#line 13
  testRunner.When("I login on the website", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 14
+ testRunner.Then("I did something", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

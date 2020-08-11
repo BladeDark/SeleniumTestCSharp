@@ -7,6 +7,7 @@ using TechTalk.SpecFlow;
 
 namespace SeleniumTest
 {
+    
     [Binding]
     public class DriverSetupHook
     {
@@ -18,7 +19,7 @@ namespace SeleniumTest
         {
             this.objectContainer = objectContainer;
         }
-
+     
 
         [BeforeScenario(Order = 0)]
         public void InitializeWebDriver()
