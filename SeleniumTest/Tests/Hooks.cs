@@ -3,6 +3,7 @@ using AventStack.ExtentReports;
 using AventStack.ExtentReports.Gherkin.Model;
 using AventStack.ExtentReports.Reporter;
 using OpenQA.Selenium;
+using SeleniumTest.manager;
 using System;
 using System.IO;
 using System.Reflection;
@@ -14,31 +15,40 @@ namespace SeleniumTest.Tests
     [Binding]
     public class Hooks : ParentTest
     {
+
         private static ExtentReports _extent;
         private ExtentTest _featureName;
         private ExtentTest _scenario;
+
+        private static FeatureContext _featureContextName;
         public Hooks(IWebDriver driver) : base(driver) { }
 
-        /*[BeforeFeature]
+        [BeforeFeature]
         public static void BeforeFeature(FeatureContext featureContextInject)
         {
-            _featureName = _extent.CreateTest<Feature>(featureContextInject.FeatureInfo.Title);
-        }*/
+            ExtentTestManager.CreateMethod(featureContextInject.FeatureInfo.Title, "1");
+        }
+
         [BeforeScenario(Order = 1)]
         public void AddFeatureName(FeatureContext featureContextInject)
         {
+            _featureContextName = featureContextInject;
             _featureName = _extent.CreateTest<Feature>(featureContextInject.FeatureInfo.Title);
+        
         }
 
         [BeforeScenario(Order = 2)]
         public void AddScenarioName(ScenarioContext scenarioContext)
         {
             _scenario = _featureName.CreateNode<Scenario>(scenarioContext.ScenarioInfo.Title).AssignCategory(scenarioContext.ScenarioInfo.Tags);
+
+            ExtentTestManager.CreateMethod(_featureContextName.FeatureInfo.Title, scenarioContext.ScenarioInfo.Title);
         }
 
         [BeforeTestRun]
         public static void InitializeReport()
         {
+           
             var htmlReporter = new ExtentHtmlReporter(@"C:\Users\RAS_T\source\repos\BladeDark\SeleniumTestCSharp\index.html");
             htmlReporter.Config.Theme = AventStack.ExtentReports.Reporter.Configuration.Theme.Dark;
 
@@ -49,6 +59,7 @@ namespace SeleniumTest.Tests
         [AfterTestRun]
         public static void TearDownReport()
         {
+            ExtentService.Instance.Flush();
             _extent.Flush();
         }
 
