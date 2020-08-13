@@ -85,10 +85,14 @@ namespace SeleniumTest.Features
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Login")]
         [NUnit.Framework.CategoryAttribute("mytag")]
+        [NUnit.Framework.CategoryAttribute("Test")]
+        [NUnit.Framework.CategoryAttribute("Test3")]
         public virtual void Login()
         {
             string[] tagsOfScenario = new string[] {
-                    "mytag"};
+                    "mytag",
+                    "Test",
+                    "Test3"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Login", null, tagsOfScenario, argumentsOfScenario);
 #line 7
@@ -127,10 +131,14 @@ this.ScenarioInitialize(scenarioInfo);
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Login2")]
         [NUnit.Framework.CategoryAttribute("mytag")]
+        [NUnit.Framework.CategoryAttribute("Test")]
+        [NUnit.Framework.CategoryAttribute("Test2")]
         public virtual void Login2()
         {
             string[] tagsOfScenario = new string[] {
-                    "mytag"};
+                    "mytag",
+                    "Test",
+                    "Test2"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Login2", null, tagsOfScenario, argumentsOfScenario);
 #line 12

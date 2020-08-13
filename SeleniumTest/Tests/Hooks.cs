@@ -14,21 +14,26 @@ namespace SeleniumTest.Tests
     [Binding]
     public class Hooks : ParentTest
     {
-        private static ExtentReports extent;
-        private static ExtentTest featureName;
-        private ExtentTest scenario;
+        private static ExtentReports _extent;
+        private ExtentTest _featureName;
+        private ExtentTest _scenario;
         public Hooks(IWebDriver driver) : base(driver) { }
 
-        [BeforeFeature]
+        /*[BeforeFeature]
         public static void BeforeFeature(FeatureContext featureContextInject)
         {
-            featureName = extent.CreateTest<Feature>(featureContextInject.FeatureInfo.Title);
+            _featureName = _extent.CreateTest<Feature>(featureContextInject.FeatureInfo.Title);
+        }*/
+        [BeforeScenario(Order = 1)]
+        public void AddFeatureName(FeatureContext featureContextInject)
+        {
+            _featureName = _extent.CreateTest<Feature>(featureContextInject.FeatureInfo.Title);
         }
 
-        [BeforeScenario(Order = 1)]
+        [BeforeScenario(Order = 2)]
         public void AddScenarioName(ScenarioContext scenarioContext)
         {
-            scenario = featureName.CreateNode<Scenario>(scenarioContext.ScenarioInfo.Title);
+            _scenario = _featureName.CreateNode<Scenario>(scenarioContext.ScenarioInfo.Title).AssignCategory(scenarioContext.ScenarioInfo.Tags);
         }
 
         [BeforeTestRun]
@@ -37,14 +42,14 @@ namespace SeleniumTest.Tests
             var htmlReporter = new ExtentHtmlReporter(@"C:\Users\RAS_T\source\repos\BladeDark\SeleniumTestCSharp\index.html");
             htmlReporter.Config.Theme = AventStack.ExtentReports.Reporter.Configuration.Theme.Dark;
 
-            extent = new ExtentReports();
-            extent.AttachReporter(htmlReporter);
+            _extent = new ExtentReports();
+            _extent.AttachReporter(htmlReporter);
         }
 
         [AfterTestRun]
         public static void TearDownReport()
         {
-            extent.Flush();
+            _extent.Flush();
         }
 
         [AfterStep]
@@ -53,46 +58,47 @@ namespace SeleniumTest.Tests
             var stepType = scenarioContext.StepContext.StepInfo.StepDefinitionType.ToString();
             if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK)
             {
+                _scenario.ToString();
                 if (stepType == "Given")
-                    scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text);
+                    _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text);
                 else if (stepType == "When")
-                    scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text);
+                    _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text);
                 else if (stepType == "Then")
-                    scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text);
+                    _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text);
                 else if (stepType == "And")
-                    scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text);
+                    _scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text);
 
             }
             else if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.TestError)
             {
                 if (stepType == "Given")
                 {
-                    scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
+                    _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
                 }
                 else if (stepType == "When")
                 {
-                    scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
+                    _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
                 }
                 else if (stepType == "Then")
                 {
-                    scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
+                    _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
                 }
                 else if (stepType == "And")
                 {
-                    scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
+                    _scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
                  
                 }
             }
             else if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.StepDefinitionPending)
             {
                 if (stepType == "Given")
-                    scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+                    _scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
                 else if (stepType == "When")
-                    scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+                    _scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
                 else if (stepType == "Then")
-                    scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+                    _scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
                 else if (stepType == "And")
-                    scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+                    _scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
             }
         }
 
