@@ -15,18 +15,20 @@ namespace SeleniumTest.Tests
     public class Hooks : ParentTest
     {
         private static ExtentReports extent;
+        private static ExtentTest featureName;
+        private ExtentTest scenario;
         public Hooks(IWebDriver driver) : base(driver) { }
 
-        [BeforeScenario(Order = 1)]
-        public void FeatureContextInjection(FeatureContext featureContextInject)
+        [BeforeFeature]
+        public static void BeforeFeature(FeatureContext featureContextInject)
         {
-            FeatureName = extent.CreateTest<Feature>(featureContextInject.FeatureInfo.Title);
+            featureName = extent.CreateTest<Feature>(featureContextInject.FeatureInfo.Title);
         }
 
-        [BeforeScenario(Order = 3)]
-        public void AddScenarioName()
+        [BeforeScenario(Order = 1)]
+        public void AddScenarioName(ScenarioContext scenarioContext)
         {
-            Scenario = FeatureName.CreateNode<Scenario>(scenarioContext.ScenarioInfo.Title);
+            scenario = featureName.CreateNode<Scenario>(scenarioContext.ScenarioInfo.Title);
         }
 
         [BeforeTestRun]
@@ -46,85 +48,60 @@ namespace SeleniumTest.Tests
         }
 
         [AfterStep]
-        public void InsertReportingSteps()
+        public void InsertReportingSteps(ScenarioContext scenarioContext)
         {
             var stepType = scenarioContext.StepContext.StepInfo.StepDefinitionType.ToString();
             if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.OK)
             {
                 if (stepType == "Given")
-                    Scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text);
+                    scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text);
                 else if (stepType == "When")
-                    Scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text);
+                    scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text);
                 else if (stepType == "Then")
-                    Scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text);
+                    scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text);
                 else if (stepType == "And")
-                    Scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text);
+                    scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text);
 
             }
             else if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.TestError)
             {
                 if (stepType == "Given")
                 {
-                    Scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.InnerException).Log(Status.Fail);
+                    scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
                 }
                 else if (stepType == "When")
                 {
-                    Scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.InnerException).Log(Status.Fail);
+                    scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
                 }
                 else if (stepType == "Then")
                 {
-                    Scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
+                    scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
                 }
                 else if (stepType == "And")
                 {
-                    Scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
+                    scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Fail(scenarioContext.TestError.Message).Log(Status.Fail);
                  
                 }
             }
             else if (scenarioContext.ScenarioExecutionStatus == ScenarioExecutionStatus.StepDefinitionPending)
             {
                 if (stepType == "Given")
-                    Scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+                    scenario.CreateNode<Given>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
                 else if (stepType == "When")
-                    Scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+                    scenario.CreateNode<When>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
                 else if (stepType == "Then")
-                    Scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+                    scenario.CreateNode<Then>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
                 else if (stepType == "And")
-                    Scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
+                    scenario.CreateNode<And>(scenarioContext.StepContext.StepInfo.Text).Skip("Step Definition Pending").Log(Status.Skip);
             }
         }
 
         [AfterScenario]
         public void AfterScenario()
         {
-
-            if (scenarioContext.TestError != null)
-            {
-                //TakeScreenshot(_driver, featureContext, scenarioContext);
-
-                var takesScreenshot = driver as ITakesScreenshot;
-                if (takesScreenshot != null)
-                {
-                    var screenshot = takesScreenshot.GetScreenshot();
-                    var tempFileName = Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileNameWithoutExtension(Path.GetTempFileName())) + ".jpg";
-                    screenshot.SaveAsFile(tempFileName, ScreenshotImageFormat.Png);
-
-                    Console.WriteLine($"SCREENSHOT[ file:///{tempFileName} ]SCREENSHOT");
-                }
-            }
-
             driver.Close();
             driver.Quit();
-
         }
-
-        private void CaptureScreenshotAndReturnModel(string name)
-        {
-            var screenshot = ((ITakesScreenshot)driver).GetScreenshot().AsBase64EncodedString;
-            MediaEntityBuilder.CreateScreenCaptureFromBase64String(screenshot, name).Build();
-        }
-
-
     }
 
 

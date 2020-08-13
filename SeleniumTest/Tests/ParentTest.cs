@@ -8,8 +8,6 @@ namespace SeleniumTest.Tests
     public abstract class ParentTest
     {
         protected IWebDriver driver;
-        protected ExtentTest FeatureName { get; set; }
-        protected ExtentTest Scenario { get; set; }
 
         protected ScenarioContext scenarioContext;
 
@@ -18,7 +16,7 @@ namespace SeleniumTest.Tests
             this.driver = driver;
         }
 
-        [BeforeScenario(Order = 2)]
+        [BeforeScenario]
         public void ScenarioContextInjection(ScenarioContext scenarioContextInject)
         {
             scenarioContext = scenarioContextInject;
